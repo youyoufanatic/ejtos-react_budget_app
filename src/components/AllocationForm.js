@@ -1,82 +1,82 @@
-import React, { useContext, useState } from 'react';
-import { AppContext } from '../context/AppContext';
+import React, { useState } from 'react';
+import { Form, Button, Container, Row, Col } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-const AllocationForm = (props) => {
-    const { dispatch, remaining } = useContext(AppContext);
+const AllocationForm = () => {
+    const [department, setDepartment] = useState('');
+    const [allocation, setAllocation] = useState('');
 
-    const [name, setName] = useState('');
-    const [cost, setCost] = useState('');
-    const [action, setAction] = useState('');
-
-    const submitEvent = () => {
-
-        if (cost > remaining) {
-            alert("The value cannot exceed remaining funds  £" + remaining);
-            setCost("");
-            return;
-        }
-
-        const expense = {
-            name: name,
-            cost: parseInt(cost),
-        };
-        if (action === "Reduce") {
-            dispatch({
-                type: 'RED_EXPENSE',
-                payload: expense,
-            });
-        } else {
-            dispatch({
-                type: 'ADD_EXPENSE',
-                payload: expense,
-            });
-        }
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log({ department, allocation });
+        alert('Allocation saved successfully!');
+        setDepartment('');
+        setAllocation('');
     };
 
     return (
-        <div>
-            <div className='row'>
-
-                <div className="input-group mb-3" style={{ marginLeft: '2rem' }}>
-                    <div className="input-group-prepend">
-                        <label className="input-group-text" htmlFor="inputGroupSelect01">Department</label>
+        <Container className="mt-5">
+            <Row className="">
+                <Col md={8}>
+                    <div className="card-body">
+                        <h3 className="card-title mb-4">Change Allocation</h3>
+                        
+                        <Form onSubmit={handleSubmit}>
+                            <Row className="align-items-end">
+                                <Col md={4}>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Department</Form.Label>
+                                        <Form.Select 
+                                            value={department} 
+                                            onChange={(e) => setDepartment(e.target.value)}
+                                            required
+                                        >
+                                            <option value="">Select Department</option>
+                                            <option value="HR">Human Resources</option>
+                                            <option value="IT">Information Technology</option>
+                                            <option value="Finance">Finance</option>
+                                            <option value="Marketing">Marketing</option>
+                                            <option value="Sales">Sales</option>
+                                        </Form.Select>
+                                    </Form.Group>
+                                </Col>
+                                
+                                <Col md={4}>
+                                    <Form.Group className="mb-3">
+                                        <Form.Label>Allocation</Form.Label>
+                                        <Form.Control 
+                                            type="text" 
+                                            placeholder="Enter allocation amount or details"
+                                            value={allocation}
+                                            onChange={(e) => setAllocation(e.target.value)}
+                                            required
+                                        />
+                                    </Form.Group>
+                                </Col>
+                                
+                                <Col md={4} className="text-center">
+                                    <Button 
+                                        variant="primary" 
+                                        type="submit" 
+                                        className="mb-3"
+                                        style={{ 
+                                            backgroundColor: '#007bff',
+                                            borderColor: '#007bff',
+                                            padding: '10px 30px',
+                                            fontSize: '16px',
+                                            boxShadow: '0 4px 6px rgba(0, 123, 255, 0.3)'
+                                        }}
+                                    >
+                                        Save Allocation
+                                    </Button>
+                                </Col>
+                            </Row>
+                        </Form>
                     </div>
-                    <select className="custom-select" id="inputGroupSelect01" onChange={(event) => setName(event.target.value)}>
-                        <option defaultValue>Choose...</option>
-                        <option value="Marketing" name="marketing"> Marketing</option>
-                        <option value="Sales" name="sales">Sales</option>
-                        <option value="Finance" name="finance">Finance</option>
-                        <option value="HR" name="hr">HR</option>
-                        <option value="IT" name="it">IT</option>
-                        <option value="Admin" name="admin">Admin</option>
-                    </select>
-
-                    <div className="input-group-prepend" style={{ marginLeft: '2rem' }}>
-                        <label className="input-group-text" htmlFor="inputGroupSelect02">Allocation</label>
-                    </div>
-                    <select className="custom-select" id="inputGroupSelect02" onChange={(event) => setAction(event.target.value)}>
-                        <option defaultValue value="Add" name="Add">Add</option>
-                        <option value="Reduce" name="Reduce">Reduce</option>
-                    </select>
-
-                    <input
-                        required='required'
-                        type='number'
-                        id='cost'
-                        value={cost}
-                        style={{ marginLeft: '2rem', size: 10 }}
-                        onChange={(event) => setCost(event.target.value)}>
-                    </input>
-
-                    <button className="btn btn-primary" onClick={submitEvent} style={{ marginLeft: '2rem' }}>
-                        Save
-                    </button>
-                </div>
-            </div>
-
-        </div>
+                </Col>
+            </Row>
+        </Container>
     );
 };
 
 export default AllocationForm;
-
